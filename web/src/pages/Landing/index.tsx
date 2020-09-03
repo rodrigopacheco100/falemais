@@ -1,28 +1,37 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Select from 'react-select';
+
 import Box from '../../components/Box';
+import ComboBox from '../../components/ComboBox';
 
 import { Container, BoxContainer, Form } from './styles';
 
+const options = [
+   { value: 'chocolate', label: 'Chocolate' },
+   { value: 'strawberry', label: 'Strawberry' },
+   { value: 'vanilla', label: 'Vanilla' },
+];
+
 const Landing: React.FC = () => {
-   // const origemRef = useRef(null);
-   const [origem, setOrigem] = useState(0);
-   const [tarifas, setTarifas] = useState();
+   const origemRef = useRef(null);
+   const [selectedOption, setSelectedOption] = useState(null);
 
-   // useEffect(() => {}, [origemRef]);
+   useEffect(() => {
+      console.log(selectedOption);
+   }, [selectedOption]);
 
-   const handleOrigemSelect = () => {};
+   function changeOrigem() {}
 
    return (
       <Container>
          <Form>
             <Select
-               className="basic-single"
-               classNamePrefix="select"
-               isClearable
-               isSearchable
-               placeholder="Origem"
-               onChange={handleOrigemSelect}
+               ref={origemRef}
+               defaultValue={selectedOption}
+               onChange={(valor) => {
+                  setSelectedOption;
+               }}
+               options={options}
             />
          </Form>
          <BoxContainer>
