@@ -6,12 +6,8 @@ const routes = Router();
 
 routes.use(logRequests);
 
-routes.get("/destino/:origem", (request: Request, response: Response) => {
-   const { origem } = request.params;
-   const tarifas = data.filter((tarifa) => tarifa.origem === Number(origem));
-   const destinos = tarifas.map((tarifa) => tarifa.destino);
-
-   return response.json(destinos);
+routes.get("/tarifas", (request: Request, response: Response) => {
+   return response.json(data);
 });
 
 routes.get("/tarifa", (request: Request, response: Response) => {
