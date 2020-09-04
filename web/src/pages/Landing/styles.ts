@@ -20,3 +20,9 @@ export const Form = styled.div`
    width: 584px;
    margin-bottom: 24px;
 `;
+
+export const ComboBoxContainer = styled.div`
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+`;

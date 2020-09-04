@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 /* eslint-disable @typescript-eslint/no-use-before-define */
 /* eslint-disable no-use-before-define */
 import React from 'react';
@@ -11,7 +12,7 @@ export interface OptionProps {
 
 interface ComboBoxProps {
    title: string;
-   value: OptionProps;
+   value: OptionProps | null;
    width: number;
    id: string;
    options: Array<OptionProps>;
@@ -35,7 +36,12 @@ const ComboBox: React.FC<ComboBoxProps> = ({
          getOptionLabel={(option) => option.title}
          style={{ width }}
          renderInput={(params) => (
-            <TextField {...params} label={title} variant="outlined" />
+            <TextField
+               {...params}
+               value={value}
+               label={title}
+               variant="outlined"
+            />
          )}
       />
    );
