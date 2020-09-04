@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import Input from '@material-ui/core/Input';
+import { TextField } from '@material-ui/core';
 
 import Box from '../../components/Box';
 import ComboBox, { OptionProps } from '../../components/ComboBox';
@@ -13,8 +13,14 @@ interface TarifaProps {
    destino: string;
 }
 
+interface PrecoProps {
+   tarifaComPlano: string;
+   tarifaSemPlano: string;
+}
+
 const Landing: React.FC = () => {
    const [tarifas, setTarifas] = useState<TarifaProps[] | null>([]);
+   const [preco, setPreco] = useState<PrecoProps>();
 
    const [origemOptions, setOrigemOptions] = useState<OptionProps[]>([]);
    const [origem, setOrigem] = useState<OptionProps | null>(null);
@@ -28,6 +34,8 @@ const Landing: React.FC = () => {
       { title: 'Plano 120', value: '120' },
    ]);
    const [plano, setPlano] = useState<OptionProps | null>(null);
+
+   const [tempo, setTempo] = useState<string>('');
 
    async function loadTarifas() {
       const data: TarifaProps[] = await (await api.get('tarifas')).data;
@@ -71,6 +79,23 @@ const Landing: React.FC = () => {
       }
    }
 
+   async function calcularTarifa() {
+      if (origem && destino && plano && tempo !== '') {
+         const response = await (
+            await api.get('/tarifa', {
+               params: {
+                  origem: origem.value,
+                  destino: destino.value,
+                  plano: plano.value,
+                  tempo,
+               },
+            })
+         ).data;
+
+         setPreco(response);
+      }
+   }
+
    useEffect(() => {
       if (tarifas) {
          setDestino(null);
@@ -84,12 +109,11 @@ const Landing: React.FC = () => {
             });
          setDestinoOptions([...destinos]);
       }
-   }, [origem]);
+   }, [origem, tarifas]);
 
    useEffect(() => {
-      console.log({ origem, destino, plano });
-      api.get('tarifa', {});
-   }, [origem, destino, plano]);
+      calcularTarifa();
+   }, [origem, destino, plano, tempo]);
 
    useEffect(() => {
       loadTarifas();
@@ -104,7 +128,7 @@ const Landing: React.FC = () => {
                   value={origem}
                   id="origem"
                   title="Origem"
-                  width={130}
+                  width={285}
                   handleChange={changeBoxes}
                />
                <ComboBox
@@ -112,24 +136,41 @@ const Landing: React.FC = () => {
                   value={destino}
                   id="destino"
                   title="Destino"
-                  width={130}
+                  width={285}
                   handleChange={changeBoxes}
                />
+            </ComboBoxContainer>
 
+            <ComboBoxContainer>
                <ComboBox
                   options={planoOptions}
                   value={plano}
                   id="plano"
                   title="Plano"
-                  width={130}
+                  width={285}
                   handleChange={changeBoxes}
                />
-               <Input placeholder="Tempo em minutos" />
+               <TextField
+                  id="tempo"
+                  value={tempo}
+                  label="Tempo em minutos"
+                  variant="outlined"
+                  onChange={(e) => {
+                     setTempo(e.target.value);
+                  }}
+                  style={{ width: 285 }}
+               />
             </ComboBoxContainer>
          </Form>
          <BoxContainer>
-            <Box title="Com Fale Mais" value="R$ 40.00" />
-            <Box title="Sem Fale Mais" value="R$ 80.00" />
+            <Box
+               title="Com Fale Mais"
+               value={preco ? preco.tarifaComPlano : ''}
+            />
+            <Box
+               title="Sem Fale Mais"
+               value={preco ? preco.tarifaSemPlano : ''}
+            />
          </BoxContainer>
       </Container>
    );

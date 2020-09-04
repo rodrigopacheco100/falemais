@@ -18,11 +18,12 @@ export const BoxContainer = styled.div`
 
 export const Form = styled.div`
    width: 584px;
-   margin-bottom: 24px;
+   margin-bottom: 36px;
 `;
 
 export const ComboBoxContainer = styled.div`
    display: flex;
    align-items: center;
    justify-content: space-between;
+   margin-top: 24px;
 `;

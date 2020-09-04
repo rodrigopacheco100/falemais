@@ -14,17 +14,20 @@ routes.get("/tarifas", (request: Request, response: Response) => {
 });
 
 routes.get("/tarifa", (request: Request, response: Response) => {
-   const { origem, destino, tempo, plano } = request.body;
+   const { origem, destino, tempo, plano } = request.query;
+   const numTempo = Number(tempo);
+   const numPlano = Number(plano);
    const tarifa = data.find(
       (tarifaItem) =>
          tarifaItem.origem === origem && tarifaItem.destino === destino
    );
+   console.log(tarifa);
 
    if (tarifa) {
       const tarifaComPlano =
-         (tarifa.preco + tarifa.preco / 10) * (tempo - plano);
+         (tarifa.preco + tarifa.preco / 10) * (numTempo - numPlano);
 
-      const tarifaSemPlano = tarifa.preco * tempo;
+      const tarifaSemPlano = tarifa.preco * numTempo;
 
       return response
          .json({
