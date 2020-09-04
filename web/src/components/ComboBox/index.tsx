@@ -11,6 +11,7 @@ export interface OptionProps {
 
 interface ComboBoxProps {
    title: string;
+   value: OptionProps;
    width: number;
    id: string;
    options: Array<OptionProps>;
@@ -20,12 +21,14 @@ interface ComboBoxProps {
 const ComboBox: React.FC<ComboBoxProps> = ({
    handleChange,
    options,
+   value,
    title,
    width,
    id,
 }) => {
    return (
       <Autocomplete
+         value={value}
          onChange={handleChange}
          id={id}
          options={options}

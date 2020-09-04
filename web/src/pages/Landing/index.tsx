@@ -17,8 +17,8 @@ const Landing: React.FC = () => {
    const [origemOptions, setOrigemOptions] = useState<OptionProps[]>([]);
    const [destinoOptions, setDestinoOptions] = useState<OptionProps[]>([]);
 
-   const [origem, setOrigem] = useState<string>('');
-   const [destino, setDestino] = useState<string>('');
+   const [origem, setOrigem] = useState<OptionProps>({});
+   const [destino, setDestino] = useState<OptionProps>({});
    const [plano, setPlano] = useState<string>('');
 
    async function loadTarifas() {
@@ -31,34 +31,38 @@ const Landing: React.FC = () => {
                value: origemItem.origem,
             };
          });
-         setOrigemOptions(origens);
+         setOrigemOptions([...origens]);
       }
    }
 
    function changeOrigemDestino(e: React.ChangeEvent, value: OptionProps) {
       const campoArray = e.target.id.split('-');
       const campo = campoArray[0];
+      console.log(campoArray[0]);
       if (campo === 'origem') {
          if (value) {
-            setOrigem(value.value);
-            if (tarifas) {
-               const destinos: OptionProps[] = tarifas
-                  .filter((destinoItem) => destinoItem.origem === origem)
-                  .map((destinoItem) => {
-                     return {
-                        title: destinoItem.destino,
-                        value: destinoItem.destino,
-                     };
-                  });
-               setDestinoOptions(destinos);
-            }
-         } else setOrigem('');
+            setOrigem(value);
+         } else setOrigem({});
       }
       if (campo === 'destino') {
-         if (value) setDestino(value.value);
-         else setDestino('');
+         if (value) setDestino(value);
+         else setDestino({});
       }
    }
+
+   useEffect(() => {
+      if (tarifas) {
+         const destinos: OptionProps[] = tarifas
+            .filter((destinoItem) => destinoItem.origem === origem?.value)
+            .map((destinoItem) => {
+               return {
+                  title: destinoItem.destino,
+                  value: destinoItem.destino,
+               };
+            });
+         setDestinoOptions(destinos);
+      }
+   }, [origem]);
 
    useEffect(() => {
       console.log({ origem, destino, plano });
@@ -73,12 +77,14 @@ const Landing: React.FC = () => {
          <Form>
             <ComboBox
                options={origemOptions}
+               value={origem}
                id="origem"
                title="Origem"
                width={284}
                handleChange={changeOrigemDestino}
             />
             <ComboBox
+               value={origem}
                options={destinoOptions}
                id="destino"
                title="Destino"
