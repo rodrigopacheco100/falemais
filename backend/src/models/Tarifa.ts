@@ -1,13 +1,13 @@
 export default class Tarifa {
-   constructor(origem = 0, destino = 0, preco = 0) {
+   constructor(origem = "", destino = "", preco = 0) {
       this.origem = origem;
       this.destino = destino;
       this.preco = preco;
    }
 
-   origem!: number;
+   origem!: string;
 
-   destino!: number;
+   destino!: string;
 
    preco!: number;
 }

@@ -4,16 +4,31 @@ import React from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+export interface OptionProps {
+   title: string;
+   value: string;
+}
+
 interface ComboBoxProps {
    title: string;
    width: number;
+   id: string;
+   options: Array<OptionProps>;
+   handleChange: any;
 }
 
-const ComboBox: React.FC<ComboBoxProps> = ({ title, width }) => {
+const ComboBox: React.FC<ComboBoxProps> = ({
+   handleChange,
+   options,
+   title,
+   width,
+   id,
+}) => {
    return (
       <Autocomplete
-         id="combo-box-demo"
-         options={top100Films}
+         onChange={handleChange}
+         id={id}
+         options={options}
          getOptionLabel={(option) => option.title}
          style={{ width }}
          renderInput={(params) => (
@@ -24,5 +39,3 @@ const ComboBox: React.FC<ComboBoxProps> = ({ title, width }) => {
 };
 
 export default ComboBox;
-// Top 100 films as rated by IMDb users. http://www.imdb.com/chart/top
-const top100Films = [{ title: 'The Shawshank Redemption', year: 1994 }];

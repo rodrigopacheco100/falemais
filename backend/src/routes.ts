@@ -7,15 +7,17 @@ const routes = Router();
 routes.use(logRequests);
 
 routes.get("/tarifas", (request: Request, response: Response) => {
-   return response.json(data);
+   const tarifas = data.map((tarifa) => {
+      return { origem: tarifa.origem, destino: tarifa.destino };
+   });
+   return response.json(tarifas);
 });
 
 routes.get("/tarifa", (request: Request, response: Response) => {
    const { origem, destino, tempo, plano } = request.body;
    const tarifa = data.find(
       (tarifaItem) =>
-         tarifaItem.origem === Number(origem) &&
-         tarifaItem.destino === Number(destino)
+         tarifaItem.origem === origem && tarifaItem.destino === destino
    );
 
    if (tarifa) {
