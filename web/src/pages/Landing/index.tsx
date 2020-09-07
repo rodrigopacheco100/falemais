@@ -20,7 +20,7 @@ interface PrecoProps {
 
 const Landing: React.FC = () => {
    const [tarifas, setTarifas] = useState<TarifaProps[] | null>([]);
-   const [preco, setPreco] = useState<PrecoProps>();
+   const [preco, setPreco] = useState<PrecoProps | null>(null);
 
    const [origemOptions, setOrigemOptions] = useState<OptionProps[]>([]);
    const [origem, setOrigem] = useState<OptionProps | null>(null);
@@ -29,18 +29,21 @@ const Landing: React.FC = () => {
    const [destino, setDestino] = useState<OptionProps | null>(null);
 
    const [planoOptions] = useState<OptionProps[]>([
-      { title: 'Plano 30', value: '30' },
-      { title: 'Plano 60', value: '60' },
-      { title: 'Plano 120', value: '120' },
+      { title: 'FaleMais 30', value: '30' },
+      { title: 'FaleMais 60', value: '60' },
+      { title: 'FaleMais 120', value: '120' },
    ]);
    const [plano, setPlano] = useState<OptionProps | null>(null);
 
    const [tempo, setTempo] = useState<string>('');
 
-   async function loadTarifas() {
+   // PEGAR AS TARIFAS NO BACKEND
+   const loadTarifas = async () => {
       const data: TarifaProps[] = await (await api.get('tarifas')).data;
       if (data) {
          setTarifas(data);
+
+         // SEPARANDO AS OPÇÕES DE ORIGEM
          const origens: OptionProps[] = data.map((origemItem) => {
             return {
                title: origemItem.origem,
@@ -48,20 +51,21 @@ const Landing: React.FC = () => {
             };
          });
 
-         const array: OptionProps[] = [];
+         // ADICIONANDO OS VALORES ÚNICOS NAS OPÇÕES
          origens.forEach((element, index, arr) => {
             let unico = true;
             for (let i = 0; i < index; i += 1) {
                if (element.value === arr[i].value) unico = false;
             }
 
-            if (unico) array.push(element);
+            if (unico)
+               setOrigemOptions((arrayatual) => [...arrayatual, element]);
          });
-
-         setOrigemOptions([...array]);
       }
-   }
+   };
 
+   /* RECEBENDO OS EVENTOS DE CADA ELEMENTO E
+      ATRIBUINDO OS VALORES CORRESPONDENTES    */
    function changeBoxes(e: React.ChangeEvent, value: OptionProps) {
       const campoArray = e.target.id.split('-');
       const campo = campoArray[0];
@@ -93,7 +97,7 @@ const Landing: React.FC = () => {
          ).data;
 
          setPreco(response);
-      }
+      } else setPreco(null);
    }
 
    useEffect(() => {
@@ -127,7 +131,7 @@ const Landing: React.FC = () => {
                   options={origemOptions}
                   value={origem}
                   id="origem"
-                  title="Origem"
+                  title="Origem (DDD)"
                   width={285}
                   handleChange={changeBoxes}
                />
@@ -135,7 +139,7 @@ const Landing: React.FC = () => {
                   options={destinoOptions}
                   value={destino}
                   id="destino"
-                  title="Destino"
+                  title="Destino (DDD)"
                   width={285}
                   handleChange={changeBoxes}
                />
@@ -164,11 +168,11 @@ const Landing: React.FC = () => {
          </Form>
          <BoxContainer>
             <Box
-               title="Com Fale Mais"
+               title="Com FaleMais"
                value={preco ? preco.tarifaComPlano : ''}
             />
             <Box
-               title="Sem Fale Mais"
+               title="Sem FaleMais"
                value={preco ? preco.tarifaSemPlano : ''}
             />
          </BoxContainer>
