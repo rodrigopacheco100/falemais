@@ -21,6 +21,12 @@ export const Form = styled.div`
    margin-bottom: 36px;
 `;
 
+export const FormTitle = styled.p`
+   font-family: 'Roboto', sans-serif;
+   font-size: 46px;
+   color: #000540;
+`;
+
 export const ComboBoxContainer = styled.div`
    display: flex;
    align-items: center;

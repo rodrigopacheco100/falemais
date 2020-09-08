@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import { TextField } from '@material-ui/core';
+import { AutocompleteChangeReason } from '@material-ui/lab/Autocomplete';
 
 import Box from '../../components/Box';
 import ComboBox, { OptionProps } from '../../components/ComboBox';
 
-import { Container, ComboBoxContainer, BoxContainer, Form } from './styles';
+import { Container, ComboBoxContainer, BoxContainer, Form, FormTitle } from './styles';
 
 import api from '../../services/api';
 
@@ -126,6 +127,7 @@ const Landing: React.FC = () => {
    return (
       <Container>
          <Form>
+            <FormTitle>Simule seu desconto com nossos planos</FormTitle>
             <ComboBoxContainer>
                <ComboBox
                   options={origemOptions}
@@ -157,6 +159,7 @@ const Landing: React.FC = () => {
                <TextField
                   id="tempo"
                   value={tempo}
+                  type="number"
                   label="Tempo em minutos"
                   variant="outlined"
                   onChange={(e) => {
