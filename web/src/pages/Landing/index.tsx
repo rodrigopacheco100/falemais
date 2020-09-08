@@ -44,10 +44,10 @@ const Landing: React.FC = () => {
          setTarifas(data);
 
          // SEPARANDO AS OPÇÕES DE ORIGEM
-         const origens: OptionProps[] = data.map((origemItem) => {
+         const origens: OptionProps[] = data.map((tarifa) => {
             return {
-               title: origemItem.origem,
-               value: origemItem.origem,
+               title: tarifa.origem,
+               value: tarifa.origem,
             };
          });
 

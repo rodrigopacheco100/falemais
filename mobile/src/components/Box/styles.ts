@@ -6,7 +6,7 @@ export const Container = styled.View`
   display: flex;
   border-radius: 12px;
   overflow: hidden;
-  margin-top: 16px;
+  margin-top: 10px;
 `;
 
 export const TitleContainer = styled.View`
