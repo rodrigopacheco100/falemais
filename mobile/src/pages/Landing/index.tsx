@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Box from "../../components/Box";
 import Picker from "react-native-dropdown-picker";
-import { Text, View, ScrollView } from "react-native";
+import { ScrollView } from "react-native";
 
 import { Container, Input, Title } from "./styles";
 import api from "../../services/api";
@@ -66,9 +66,45 @@ const Landing: React.FC = () => {
     });
   };
 
+  const calcularTarifa = async () => {
+    if (origem && destino && plano && tempo !== '') {
+      const response = await (
+        await api.get('/tarifa', {
+          params: {
+            origem: origem.value,
+            destino: destino.value,
+            plano: plano.value,
+            tempo,
+          },
+        })
+      ).data;
+
+      setPreco(response);
+    } else setPreco(null);
+  };
+
+  useEffect(() => {
+    if (tarifas) {
+      setDestino(null);
+      const destinos: OptionProps[] = tarifas
+        .filter((tarifa) => tarifa.origem === origem?.value)
+        .map((tarifa) => {
+          return {
+            label: tarifa.destino,
+            value: tarifa.destino,
+          };
+        });
+      setDestinoOptions([...destinos]);
+    }
+  }, [origem, tarifas]);
+
   useEffect(() => {
     loadTarifas();
   }, []);
+
+  useEffect(() => {
+    calcularTarifa();
+  }, [origem, destino, plano, tempo]);
 
   return (
     <Container>
@@ -77,23 +113,20 @@ const Landing: React.FC = () => {
         <Picker
           onChangeItem={(item) => {
             setOrigem(item);
+            setDestino(null);
           }}
           placeholder="Origem"
           containerStyle={{ height: 60, marginTop: 5 }}
           items={origemOptions}
         />
         <Picker
+          defaultValue={destino ? destino.value : null}
           onChangeItem={(item) => {
             setDestino(item);
           }}
           placeholder="Destino"
           containerStyle={{ height: 60, marginTop: 5 }}
-          items={[
-            { label: "11", value: "11" },
-            { label: "16", value: "16" },
-            { label: "17", value: "17" },
-            { label: "18", value: "18" },
-          ]}
+          items={destinoOptions}
         />
         <Picker
           onChangeItem={(item) => {
@@ -109,8 +142,8 @@ const Landing: React.FC = () => {
           maxLength={10}
           placeholder="Tempo em minutos"
         />
-        <Box title="Com FaleMais" value="R$10.00" />
-        <Box title="Sem FaleMais" value="R$40.00" />
+        <Box title="Com FaleMais" value={preco ? preco.tarifaComPlano : ''} />
+        <Box title="Sem FaleMais" value={preco ? preco.tarifaSemPlano : ''} />
       </ScrollView>
     </Container>
   );
